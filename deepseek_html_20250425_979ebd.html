@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle de Vendas Semanal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4cc9f0;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f7fa;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            font-weight: 500;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo i {
+            font-size: 1.8rem;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+        
+        .card-icon {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary-color);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .card-body {
+            margin-top: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border 0.3s ease;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+        
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        @media (max-width: 600px) {
+            .summary-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .summary-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 10px 0;
+        }
+        
+        .summary-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .positive {
+            color: var(--success-color);
+        }
+        
+        .negative {
+            color: var(--danger-color);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            font-weight: 500;
+            color: #555;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+        
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+        }
+        
+        .btn-edit {
+            background-color: var(--warning-color);
+        }
+        
+        .btn-edit:hover {
+            background-color: #e68a00;
+        }
+        
+        .btn-delete {
+            background-color: var(--danger-color);
+        }
+        
+        .btn-delete:hover {
+            background-color: #d32f2f;
+        }
+        
+        .chart-container {
+            height: 300px;
+            margin-top: 20px;
+        }
+        
+        .week-selector {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .week-nav {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-chart-line"></i>
+                <h1>Controle de Vendas</h1>
+            </div>
+            <div>
+                <span id="current-date"></span>
+            </div>
+        </div>
+    </header>
+    
+    <main class="container">
+        <div class="dashboard">
+            <div>
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Adicionar Vendas</h2>
+                        <div class="card-icon">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form id="sales-form">
+                            <div class="form-group">
+                                <label for="week">Semana</label>
+                                <input type="week" id="week" name="week" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="total-sales">Valor Total (R$)</label>
+                                <input type="number" id="total-sales" name="total-sales" step="0.01" min="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="quantity">Quantidade de Vendas</label>
+                                <input type="number" id="quantity" name="quantity" min="0" required>
+                            </div>
+                            <button type="submit" class="btn btn-block">Adicionar</button>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="card" style="margin-top: 20px;">
+                    <div class="card-header">
+                        <h2 class="card-title">Resumo</h2>
+                        <div class="card-icon">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="summary-cards">
+                            <div class="card">
+                                <div class="summary-label">Total do Mês</div>
+                                <div class="summary-value" id="month-total">R$ 0,00</div>
+                                <div class="summary-label">Variação</div>
+                                <div id="month-variation">0% <i class="fas fa-equals"></i></div>
+                            </div>
+                            <div class="card">
+                                <div class="summary-label">Média Semanal</div>
+                                <div class="summary-value" id="week-avg">R$ 0,00</div>
+                                <div class="summary-label">Variação</div>
+                                <div id="week-variation">0% <i class="fas fa-equals"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Histórico de Vendas</h2>
+                        <div class="card-icon">
+                            <i class="fas fa-history"></i>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="week-selector">
+                            <h3>Semana: <span id="selected-week">Selecione uma semana</span></h3>
+                            <div class="week-nav">
+                                <button class="btn btn-sm" id="prev-week"><i class="fas fa-chevron-left"></i> Anterior</button>
+                                <button class="btn btn-sm" id="next-week">Próxima <i class="fas fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <canvas id="sales-chart"></canvas>
+                        </div>
+                        
+                        <table id="sales-table">
+                            <thead>
+                                <tr>
+                                    <th>Semana</th>
+                                    <th>Valor Total</th>
+                                    <th>Quantidade</th>
+                                    <th>Ticket Médio</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Dados serão inseridos via JavaScript -->
+                                <tr>
+                                    <td colspan="5" class="no-data">Nenhum dado de venda encontrado. Adicione sua primeira venda!</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <p>Sistema de Controle de Vendas Semanal &copy; <span id="current-year"></span></p>
+    </footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Data atual
+        const now = new Date();
+        document.getElementById('current-date').textContent = now.toLocaleDateString('pt-BR', { 
+            weekday: 'long', 
+            day: 'numeric', 
+            month: 'long', 
+            year: 'numeric' 
+        });
+        document.getElementById('current-year').textContent = now.getFullYear();
+        
+        // Definir semana atual como padrão no formulário
+        const currentWeek = getWeekNumber(now);
+        document.getElementById('week').value = `${now.getFullYear()}-W${currentWeek.toString().padStart(2, '0')}`;
+        
+        // Função para obter número da semana
+        function getWeekNumber(date) {
+            const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
+            const pastDaysOfYear = (date - firstDayOfYear) / 86400000;
+            return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+        }
+        
+        // Armazenamento local para as vendas
+        let salesData = JSON.parse(localStorage.getItem('salesData')) || [];
+        
+        // Inicializar gráfico
+        const ctx = document.getElementById('sales-chart').getContext('2d');
+        const salesChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [
+                    {
+                        label: 'Valor Total (R$)',
+                        data: [],
+                        backgroundColor: 'rgba(67, 97, 238, 0.7)',
+                        borderColor: 'rgba(67, 97, 238, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Quantidade de Vendas',
+                        data: [],
+                        backgroundColor: 'rgba(76, 201, 240, 0.7)',
+                        borderColor: 'rgba(76, 201, 240, 1)',
+                        borderWidth: 1,
+                        type: 'line',
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Valor (R$)'
+                        }
+                    },
+                    y1: {
+                        beginAtZero: true,
+                        position: 'right',
+                        title: {
+                            display: true,
+                            text: 'Quantidade'
+                        },
+                        grid: {
+                            drawOnChartArea: false
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Atualizar tabela e gráfico
+        function updateSalesDisplay() {
+            const tableBody = document.querySelector('#sales-table tbody');
+            tableBody.innerHTML = '';
+            
+            if (salesData.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="5" class="no-data">Nenhum dado de venda encontrado. Adicione sua primeira venda!</td></tr>';
+                return;
+            }
+            
+            // Ordenar por semana (mais recente primeiro)
+            salesData.sort((a, b) => new Date(b.week) - new Date(a.week));
+            
+            // Atualizar tabela
+            salesData.forEach(sale => {
+                const row = document.createElement('tr');
+                const avgTicket = sale.total / sale.quantity;
+                
+                row.innerHTML = `
+                    <td>${formatWeek(sale.week)}</td>
+                    <td>R$ ${sale.total.toFixed(2).replace('.', ',')}</td>
+                    <td>${sale.quantity}</td>
+                    <td>R$ ${avgTicket.toFixed(2).replace('.', ',')}</td>
+                    <td class="actions">
+                        <button class="btn btn-sm btn-edit" data-week="${sale.week}"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-delete" data-week="${sale.week}"><i class="fas fa-trash"></i></button>
+                    </td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+            
+            // Atualizar gráfico com os últimos 8 registros
+            const lastEight = salesData.slice(0, 8).reverse();
+            const weeks = lastEight.map(s => formatWeek(s.week));
+            const totals = lastEight.map(s => s.total);
+            const quantities = lastEight.map(s => s.quantity);
+            
+            salesChart.data.labels = weeks;
+            salesChart.data.datasets[0].data = totals;
+            salesChart.data.datasets[1].data = quantities;
+            salesChart.update();
+            
+            // Atualizar resumos
+            updateSummary();
+        }
+        
+        // Formatar semana para exibição
+        function formatWeek(weekString) {
+            const [year, week] = weekString.split('-W');
+            return `Sem ${week}/${year}`;
+        }
+        
+        // Atualizar resumos
+        function updateSummary() {
+            if (salesData.length === 0) {
+                document.getElementById('month-total').textContent = 'R$ 0,00';
+                document.getElementById('week-avg').textContent = 'R$ 0,00';
+                document.getElementById('month-variation').innerHTML = '0% <i class="fas fa-equals"></i>';
+                document.getElementById('week-variation').innerHTML = '0% <i class="fas fa-equals"></i>';
+                return;
+            }
+            
+            // Total do mês atual
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+            const monthSales = salesData.filter(sale => {
+                const saleDate = new Date(sale.week);
+                return saleDate.getMonth() === currentMonth && saleDate.getFullYear() === currentYear;
+            });
+            
+            const monthTotal = monthSales.reduce((sum, sale) => sum + sale.total, 0);
+            document.getElementById('month-total').textContent = `R$ ${monthTotal.toFixed(2).replace('.', ',')}`;
+            
+            // Variação do mês (simulada)
+            const monthVariation = Math.random() * 10 - 5; // -5% a +5%
+            const monthVariationElement = document.getElementById('month-variation');
+            monthVariationElement.innerHTML = `${Math.abs(monthVariation).toFixed(1)}% `;
+            
+            if (monthVariation > 0) {
+                monthVariationElement.innerHTML += '<i class="fas fa-arrow-up positive"></i>';
+                monthVariationElement.classList.add('positive');
+                monthVariationElement.classList.remove('negative');
+            } else if (monthVariation < 0) {
+                monthVariationElement.innerHTML += '<i class="fas fa-arrow-down negative"></i>';
+                monthVariationElement.classList.add('negative');
+                monthVariationElement.classList.remove('positive');
+            } else {
+                monthVariationElement.innerHTML += '<i class="fas fa-equals"></i>';
+                monthVariationElement.classList.remove('positive', 'negative');
+            }
+            
+            // Média semanal
+            const weekAvg = salesData.reduce((sum, sale) => sum + sale.total, 0) / salesData.length;
+            document.getElementById('week-avg').textContent = `R$ ${weekAvg.toFixed(2).replace('.', ',')}`;
+            
+            // Variação semanal (simulada)
+            const weekVariation = Math.random() * 15 - 7.5; // -7.5% a +7.5%
+            const weekVariationElement = document.getElementById('week-variation');
+            weekVariationElement.innerHTML = `${Math.abs(weekVariation).toFixed(1)}% `;
+            
+            if (weekVariation > 0) {
+                weekVariationElement.innerHTML += '<i class="fas fa-arrow-up positive"></i>';
+                weekVariationElement.classList.add('positive');
+                weekVariationElement.classList.remove('negative');
+            } else if (weekVariation < 0) {
+                weekVariationElement.innerHTML += '<i class="fas fa-arrow-down negative"></i>';
+                weekVariationElement.classList.add('negative');
+                weekVariationElement.classList.remove('positive');
+            } else {
+                weekVariationElement.innerHTML += '<i class="fas fa-equals"></i>';
+                weekVariationElement.classList.remove('positive', 'negative');
+            }
+        }
+        
+        // Formulário de adição de vendas
+        document.getElementById('sales-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const week = document.getElementById('week').value;
+            const total = parseFloat(document.getElementById('total-sales').value);
+            const quantity = parseInt(document.getElementById('quantity').value);
+            
+            // Verificar se já existe registro para essa semana
+            const existingIndex = salesData.findIndex(sale => sale.week === week);
+            
+            if (existingIndex >= 0) {
+                // Atualizar existente
+                salesData[existingIndex] = { week, total, quantity };
+            } else {
+                // Adicionar novo
+                salesData.push({ week, total, quantity });
+            }
+            
+            // Salvar no localStorage
+            localStorage.setItem('salesData', JSON.stringify(salesData));
+            
+            // Atualizar exibição
+            updateSalesDisplay();
+            
+            // Resetar formulário
+            this.reset();
+            document.getElementById('week').value = week; // Manter a semana selecionada
+            
+            // Mostrar mensagem de sucesso
+            alert('Vendas adicionadas/atualizadas com sucesso!');
+        });
+        
+        // Navegação por semanas
+        let currentDisplayWeek = salesData.length > 0 ? salesData[0].week : document.getElementById('week').value;
+        updateSelectedWeekDisplay();
+        
+        document.getElementById('prev-week').addEventListener('click', function() {
+            navigateWeek(-1);
+        });
+        
+        document.getElementById('next-week').addEventListener('click', function() {
+            navigateWeek(1);
+        });
+        
+        function navigateWeek(direction) {
+            if (salesData.length === 0) return;
+            
+            const currentIndex = salesData.findIndex(sale => sale.week === currentDisplayWeek);
+            let newIndex = currentIndex + direction;
+            
+            if (newIndex < 0) newIndex = salesData.length - 1;
+            if (newIndex >= salesData.length) newIndex = 0;
+            
+            currentDisplayWeek = salesData[newIndex].week;
+            updateSelectedWeekDisplay();
+        }
+        
+        function updateSelectedWeekDisplay() {
+            document.getElementById('selected-week').textContent = formatWeek(currentDisplayWeek);
+        }
+        
+        // Editar/Excluir vendas (delegação de eventos)
+        document.querySelector('#sales-table').addEventListener('click', function(e) {
+            if (e.target.closest('.btn-edit')) {
+                const week = e.target.closest('.btn-edit').dataset.week;
+                editSale(week);
+            } else if (e.target.closest('.btn-delete')) {
+                const week = e.target.closest('.btn-delete').dataset.week;
+                deleteSale(week);
+            }
+        });
+        
+        function editSale(week) {
+            const sale = salesData.find(s => s.week === week);
+            if (!sale) return;
+            
+            document.getElementById('week').value = sale.week;
+            document.getElementById('total-sales').value = sale.total;
+            document.getElementById('quantity').value = sale.quantity;
+            
+            // Rolagem suave para o formulário
+            document.getElementById('sales-form').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function deleteSale(week) {
+            if (confirm('Tem certeza que deseja excluir os dados desta semana?')) {
+                salesData = salesData.filter(s => s.week !== week);
+                localStorage.setItem('salesData', JSON.stringify(salesData));
+                updateSalesDisplay();
+                
+                if (currentDisplayWeek === week) {
+                    currentDisplayWeek = salesData.length > 0 ? salesData[0].week : document.getElementById('week').value;
+                    updateSelectedWeekDisplay();
+                }
+            }
+        }
+        
+        // Inicializar exibição
+        updateSalesDisplay();
+    </script>
+</body>
+</html>
